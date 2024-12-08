@@ -1,0 +1,14 @@
+Anomaly Detection Report
+======================
+
+Total windows analyzed: 323
+Number of anomalies detected: 27
+Percentage of anomalies: 8.36%
+
+Threshold used: 0.3
+
+Score Statistics:
+Mean score: 0.0960
+Standard deviation: 0.2364
+Min score: 0.0009
+Max score: 0.9980
