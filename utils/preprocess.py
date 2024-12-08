@@ -22,7 +22,6 @@ class TimeSeriesPreprocessor:
         self.scaler = MinMaxScaler()
         
     def add_time_features(self, df):
-        """Enhanced time features"""
         df = df.copy()
         
         df['hour'] = df.timestamp.dt.hour
