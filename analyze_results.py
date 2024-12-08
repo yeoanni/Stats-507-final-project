@@ -11,8 +11,7 @@ class ModelAnalyzer:
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.preprocessor = TimeSeriesPreprocessor()
         self.model = TransformerAnomaly().to(self.device)
-        
-        # Load only the model state dict from the checkpoint
+
         checkpoint = torch.load(model_path, map_location=self.device)
         if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
             self.model.load_state_dict(checkpoint['model_state_dict'])
@@ -21,7 +20,6 @@ class ModelAnalyzer:
         self.model.eval()
 
     def analyze_performance(self):
-        """Analyze model performance"""
         print("Loading data...")
         base_url = "https://raw.githubusercontent.com/numenta/NAB/master/data/"
         file_path = f"{base_url}realAWSCloudwatch/ec2_cpu_utilization_825cc2.csv"
@@ -49,20 +47,16 @@ class ModelAnalyzer:
         self.generate_report(predictions, labels, df)
         
     def generate_report(self, predictions, labels, df):
-        """Generate comprehensive analysis report"""
         save_path = 'results/analysis_report'
         Path(save_path).mkdir(parents=True, exist_ok=True)
         
-        # 1. Time Series Plot
         plt.figure(figsize=(15, 10))
         
-        # Original data with predictions
         plt.subplot(3, 1, 1)
         window_size = self.preprocessor.window_size
         valid_timestamps = df['timestamp'][window_size:len(predictions)+window_size]
         plt.plot(df['timestamp'], df['value'], label='Original', alpha=0.7)
         
-        # Mark anomalies
         threshold = 0.3
         anomaly_mask = predictions > threshold
         anomaly_times = valid_timestamps[anomaly_mask]
@@ -71,14 +65,12 @@ class ModelAnalyzer:
         plt.title('CPU Utilization with Detected Anomalies')
         plt.legend()
         
-        # 2. Prediction Scores
         plt.subplot(3, 1, 2)
         plt.plot(valid_timestamps, predictions, label='Anomaly Score')
         plt.axhline(y=threshold, color='r', linestyle='--', label='Threshold')
         plt.title('Anomaly Scores Over Time')
         plt.legend()
-        
-        # 3. Score Distribution
+
         plt.subplot(3, 1, 3)
         plt.hist(predictions, bins=50, density=True, alpha=0.7)
         plt.axvline(x=threshold, color='r', linestyle='--', label='Threshold')
@@ -89,7 +81,6 @@ class ModelAnalyzer:
         plt.savefig(f'{save_path}/anomaly_detection_results.png')
         plt.close()
         
-        # Save metrics report
         with open(f'{save_path}/detection_report.txt', 'w') as f:
             f.write("Anomaly Detection Report\n")
             f.write("======================\n\n")
@@ -98,7 +89,6 @@ class ModelAnalyzer:
             f.write(f"Percentage of anomalies: {100 * np.sum(anomaly_mask) / len(predictions):.2f}%\n")
             f.write(f"\nThreshold used: {threshold}\n")
             
-            # Calculate statistics
             mean_score = np.mean(predictions)
             std_score = np.std(predictions)
             f.write(f"\nScore Statistics:\n")
