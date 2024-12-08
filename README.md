@@ -1,37 +1,37 @@
-# Transformer-based Anomaly Detection in Time Series Data
+# Anomaly Detection in Time Series Data using Transformers
 
 ## Project Structure
 ```
-├── models/                               # Model architecture and saved states
-│   ├── __pycache__/                     # Python cache files
+├── models/                                # Model architecture and saved states
+│   ├── __pycache__/                       # Python cache files
 │   │   ├── __init__.cpython-312.pyc
 │   │   └── transformer.cpython-312.pyc
-│   ├── saved/                           # Saved model checkpoints
-│   │   └── best_model.pth              # Best performing model state
-│   ├── __init__.py                     # Package initializer
-│   └── transformer.py                   # Transformer model implementation
-├── proposal/                            # Project documentation
-│   ├── 507 Final Proposal.pdf          # Original project proposal
-│   └── references.bib                  # Bibliography references
-├── results/                            # Analysis outputs and visualizations
-│   ├── analysis_report/                # Detailed performance analysis
+│   ├── saved/                             # Saved model checkpoints
+│   │   └── best_model.pth                 # Best performing model state
+│   ├── __init__.py                        # Package initializer
+│   └── transformer.py                     # Transformer model implementation
+├── proposal/                              # Project documentation
+│   ├── 507 Final Proposal.pdf             # Original project proposal
+│   └── references.bib                     # Bibliography references
+├── results/                               # Analysis outputs and visualizations
+│   ├── analysis_report/                   # Detailed performance analysis
 │   │   ├── anomaly_detection_results.png  # Visual results of detection
-│   │   └── detection_report.txt        # Detailed metrics and findings
-│   ├── performance_curves.png          # PR and ROC curves
-│   └── training_history.png            # Training and validation loss plots
-├── utils/                              # Utility functions and helpers
-│   ├── __pycache__/                    # Python cache files
+│   │   └── detection_report.txt           # Detailed metrics and findings
+│   ├── performance_curves.png             # PR and ROC curves
+│   └── training_history.png               # Training and validation loss plots
+├── utils/                                 # Utility functions and helpers
+│   ├── __pycache__/                       # Python cache files
 │   │   ├── __init__.cpython-312.pyc
 │   │   └── preprocess.cpython-312.pyc
-│   ├── __init__.py                    # Package initializer
-│   └── preprocess.py                  # Data preprocessing utilities
-├── analyze_results.py                  # Results analysis script
-├── baseline_comparison.py              # Comparison with baseline methods
-├── data_loader.py                     # Data loading and management
-├── evaluate.py                        # Model evaluation script
-├── train.py                          # Model training script
-├── visualize_results.py              # Results visualization utilities
-└── README.md                         # Project documentation
+│   ├── __init__.py                        # Package initializer
+│   └── preprocess.py                      # Data preprocessing utilities
+├── analyze_results.py                     # Results analysis script
+├── baseline_comparison.py                 # Comparison with baseline methods
+├── data_loader.py                         # Data loading and management
+├── evaluate.py                            # Model evaluation script
+├── train.py                               # Model training script
+├── visualize_results.py                   # Results visualization utilities
+└── README.md                              # Project documentation
 ```
 
 ## Project Overview
