@@ -1,85 +1,82 @@
 # Transformer-based Anomaly Detection in Time Series Data
 
-## Overview
-This project implements a Transformer-based approach for detecting anomalies in time series data, specifically focused on cloud infrastructure metrics from the Numenta Anomaly Benchmark (NAB) dataset. The implementation achieves strong performance with PR-AUC of 0.857 and ROC-AUC of 0.976.
-
 ## Project Structure
 ```
-├── data/
-│   ├── raw/                  # Raw data files from NAB
-│   └── processed/            # Preprocessed data files
-├── models/
-│   ├── __init__.py
-│   ├── transformer.py        # Transformer model implementation
-│   └── saved/               # Saved model checkpoints
-├── utils/
-│   ├── __init__.py
-│   └── preprocessing.py     # Data preprocessing utilities
-├── evaluate.py              # Model evaluation script
-├── train.py                # Training script
-└── README.md
+├── models/                     # Model-related code and saved models
+├── proposal/                   # Project proposal documents
+├── results/                    # Experimental results and analysis
+├── utils/                      # Utility functions and helpers
+├── README.md                   # Project documentation
+├── analyze_results.py          # Results analysis script
+├── baseline_comparison.py      # Baseline model comparison
+├── data_loader.py             # Data loading utilities
+├── evaluate.py                # Model evaluation script
+├── train.py                   # Training script
+└── visualize_results.py       # Visualization utilities
 ```
 
-## Installation
-```bash
-# Clone the repository
-git clone https://github.com/yeoanni/Stats-507-final-project.git
-cd Stats-507-final-project
+## Overview
+This project implements a Transformer-based approach for anomaly detection in time series data, focusing on cloud infrastructure metrics. Using the NAB (Numenta Anomaly Benchmark) dataset, we demonstrate the effectiveness of Transformer architectures for identifying anomalous patterns in CPU utilization data.
 
-# Install required packages
-pip install torch pandas numpy sklearn matplotlib
+## Key Features
+- Custom Transformer architecture for time series data
+- Comprehensive data preprocessing pipeline
+- Comparative analysis with baseline methods
+- Visualization tools for result analysis
+- Real-world application on cloud infrastructure metrics
+
+## Performance
+- PR-AUC: 0.857
+- ROC-AUC: 0.976
+- Training converged in 96 epochs
+- Effective anomaly detection on AWS EC2 CPU metrics
+
+## Prerequisites
+```bash
+python>=3.8
+torch
+pandas
+numpy
+matplotlib
+scikit-learn
 ```
 
 ## Usage
-
-### Training
-```python
+1. Training the model:
+```bash
 python train.py
 ```
-This will:
-- Load and preprocess the NAB dataset
-- Train the Transformer model
-- Save the best model based on validation performance
 
-### Evaluation
-```python
+2. Evaluating performance:
+```bash
 python evaluate.py
 ```
-This will:
-- Load the trained model
-- Generate performance metrics
-- Create visualization plots
 
-## Model Architecture
-- Input dimension: 12 features
-- Transformer encoder with 4 attention heads
-- Binary classification output
-- Window size: 288 points (24 hours)
-- Stride: 12 points
+3. Analyzing results:
+```bash
+python analyze_results.py
+```
+
+4. Visualizing results:
+```bash
+python visualize_results.py
+```
+
+5. Comparing with baselines:
+```bash
+python baseline_comparison.py
+```
 
 ## Results
-- PR-AUC: 0.857
-- ROC-AUC: 0.976
-- Successfully detects anomalies in CPU utilization patterns
-- Effective handling of temporal dependencies
+Results are stored in the `results/` directory, including:
+- Performance metrics
+- Visualization plots
+- Analysis reports
+- Comparative studies
 
-## Data
-The project uses the Numenta Anomaly Benchmark (NAB) dataset, focusing on AWS EC2 CPU utilization metrics. Data preprocessing includes:
-- Time-based feature engineering
-- Sequence windowing
-- Min-max scaling
-- Temporal encoding
-
-## Contributing
-This project is part of STATS 507 coursework. Contributions welcome through pull requests.
-
-## License
-[MIT License](LICENSE)
-
-## Contact
-Yuhan Ye - yuhanye@umich.edu
+## Author
+Yuhan Ye (yuhanye@umich.edu)
 
 ## Acknowledgments
-- NAB dataset providers
-- PyTorch team
 - STATS 507 course staff
+- Numenta Anomaly Benchmark (NAB) dataset
