@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# Define LSTM-based Anomaly Detector
 class LSTMAnomalyDetector(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
         super(LSTMAnomalyDetector, self).__init__()
@@ -20,14 +19,12 @@ class LSTMAnomalyDetector(nn.Module):
         return self.fc(out)
 
 
-# Synthetic Dataset Creation
 def create_synthetic_data(num_samples=1000, num_features=12, anomaly_rate=0.05):
     data = np.random.rand(num_samples, num_features)
     labels = (np.random.rand(num_samples) < anomaly_rate).astype(int)  # 5% anomalies
     return data, labels
 
 
-# Dataset Loader
 class TimeSeriesDataset(Dataset):
     def __init__(self, data, labels):
         self.data = data
@@ -40,7 +37,6 @@ class TimeSeriesDataset(Dataset):
         return self.data[idx], self.labels[idx]
 
 
-# Create DataLoader
 def create_dataloaders(data, labels, batch_size=32):
     # Convert to PyTorch tensors
     data = torch.tensor(data, dtype=torch.float32)
@@ -53,7 +49,6 @@ def create_dataloaders(data, labels, batch_size=32):
     return dataloader
 
 
-# Evaluate Models
 def evaluate_model(model, dataloader, device):
     model.eval()
     y_true, y_scores = [], []
@@ -64,7 +59,6 @@ def evaluate_model(model, dataloader, device):
         y_true.extend(targets.cpu().numpy())
         y_scores.extend(outputs.cpu().numpy())
 
-    # Compute metrics
     precision, recall, _ = precision_recall_curve(y_true, y_scores)
     pr_auc = auc(recall, precision)
     fpr, tpr, _ = roc_curve(y_true, y_scores)
@@ -72,21 +66,15 @@ def evaluate_model(model, dataloader, device):
     return {'PR-AUC': pr_auc, 'ROC-AUC': roc_auc}
 
 
-# Main Function
 if __name__ == "__main__":
-    # Device setup
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-    # Generate synthetic data
     data, labels = create_synthetic_data()
     dataloader = create_dataloaders(data, labels, batch_size=16)
 
-    # LSTM Model
     lstm_model = LSTMAnomalyDetector(input_dim=12, hidden_dim=64, num_layers=2, output_dim=1).to(device)
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(lstm_model.parameters(), lr=0.001)
 
-    # Train LSTM Model
     lstm_model.train()
     for epoch in range(10):  # Short training loop for demo purposes
         epoch_loss = 0
@@ -100,11 +88,9 @@ if __name__ == "__main__":
             epoch_loss += loss.item()
         print(f"Epoch {epoch + 1}/10, Loss: {epoch_loss:.4f}")
 
-    # Evaluate LSTM
     lstm_results = evaluate_model(lstm_model, dataloader, device)
     print(f"LSTM Results: PR-AUC = {lstm_results['PR-AUC']:.3f}, ROC-AUC = {lstm_results['ROC-AUC']:.3f}")
 
-    # Moving Average Baseline
     data_flat = data[:, -1]  # Use last feature as a simple example
     moving_avg = np.convolve(data_flat, np.ones(5)/5, mode='same')
     anomaly_scores = np.abs(data_flat - moving_avg)
