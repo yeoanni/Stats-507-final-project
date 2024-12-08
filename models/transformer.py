@@ -40,7 +40,6 @@ class TransformerAnomaly(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, src):
-        # Input shape: [batch_size, seq_len, input_dim]
         src = self.input_projection(src)
         src = self.pos_encoder(src)
         output = self.transformer_encoder(src)
