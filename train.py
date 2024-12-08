@@ -21,20 +21,16 @@ def main():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     
-    # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logger.info(f"Using device: {device}")
     
-    # Load and preprocess data
     logger.info("Loading and preprocessing data...")
     preprocessor = TimeSeriesPreprocessor()
     train_loader, val_loader = preprocessor.create_dataloaders(batch_size=16)
     
-    # Calculate positive class weight
     pos_weight = torch.tensor((1 - 0.0327) / 0.0327)
     logger.info(f"Positive class weight: {pos_weight:.2f}")
     
-    # Initialize model
     logger.info("Initializing model...")
     model = TransformerAnomaly(
         input_dim=12,
@@ -49,7 +45,6 @@ def main():
         optimizer, mode='min', factor=0.5, patience=5, min_lr=1e-6, verbose=True
     )
     
-    # Training parameters
     num_epochs = 150  # Increased from 100
     best_val_loss = float('inf')
     patience = 15     # Increased from 10
@@ -58,13 +53,11 @@ def main():
     train_losses = []
     val_losses = []
     
-    # Create save directory
     save_dir = Path('models/saved')
     save_dir.mkdir(parents=True, exist_ok=True)
     
     logger.info("Starting training...")
     for epoch in range(num_epochs):
-        # Training
         model.train()
         total_train_loss = 0
         
@@ -84,7 +77,6 @@ def main():
         
         avg_train_loss = total_train_loss / len(train_loader)
         
-        # Validation
         model.eval()
         total_val_loss = 0
         
@@ -108,10 +100,8 @@ def main():
         logger.info(f"Val Loss: {avg_val_loss:.4f}")
         logger.info(f"Learning Rate: {current_lr:.6f}")
         
-        # Learning rate scheduling
         scheduler.step(avg_val_loss)
         
-        # Early stopping with minimum improvement threshold
         if avg_val_loss < best_val_loss - min_improvement:
             best_val_loss = avg_val_loss
             patience_counter = 0
@@ -131,7 +121,6 @@ def main():
                 logger.info(f"Early stopping triggered. Best val loss: {best_val_loss:.6f}")
                 break
     
-    # Plot training history
     import matplotlib.pyplot as plt
     plt.figure(figsize=(10, 6))
     plt.plot(train_losses, label='Training Loss')
