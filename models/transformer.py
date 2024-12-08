@@ -21,13 +21,9 @@ class TransformerAnomaly(nn.Module):
     def __init__(self, input_dim=12, d_model=32, nhead=4, num_layers=1, dropout=0.1):
         super().__init__()
         
-        # Input projection
         self.input_projection = nn.Linear(input_dim, d_model)
-        
-        # Positional encoding
         self.pos_encoder = PositionalEncoding(d_model)
         
-        # Transformer encoder
         encoder_layers = nn.TransformerEncoderLayer(
             d_model=d_model,
             nhead=nhead,
@@ -37,9 +33,8 @@ class TransformerAnomaly(nn.Module):
         )
         self.transformer_encoder = nn.TransformerEncoder(encoder_layers, num_layers)
         
-        # Output layers
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(d_model * 288, 64)  # Adjusted size
+        self.fc1 = nn.Linear(d_model * 288, 64)
         self.dropout = nn.Dropout(dropout)
         self.fc2 = nn.Linear(64, 1)
         self.sigmoid = nn.Sigmoid()
