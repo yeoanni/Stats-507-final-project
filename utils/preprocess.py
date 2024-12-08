@@ -25,36 +25,29 @@ class TimeSeriesPreprocessor:
         """Enhanced time features"""
         df = df.copy()
         
-        # Basic time features
         df['hour'] = df.timestamp.dt.hour
         df['day_of_week'] = df.timestamp.dt.dayofweek
         df['day_of_month'] = df.timestamp.dt.day
         
-        # Cyclical encoding for temporal features
         df['hour_sin'] = np.sin(2 * np.pi * df['hour']/24)
         df['hour_cos'] = np.cos(2 * np.pi * df['hour']/24)
         df['day_sin'] = np.sin(2 * np.pi * df['day_of_week']/7)
         df['day_cos'] = np.cos(2 * np.pi * df['day_of_week']/7)
         
-        # Add rolling statistics
         df['rolling_mean'] = df['value'].rolling(window=12, min_periods=1).mean()
         df['rolling_std'] = df['value'].rolling(window=12, min_periods=1).std()
         df['rolling_max'] = df['value'].rolling(window=12, min_periods=1).max()
         df['rolling_min'] = df['value'].rolling(window=12, min_periods=1).min()
         
-        # Add lag features
         df['lag_1'] = df['value'].shift(1)
         df['lag_6'] = df['value'].shift(6)
         df['lag_12'] = df['value'].shift(12)
         
-        # Fill NaN values
         df = df.fillna(method='bfill').fillna(method='ffill')
         
         return df
 
     def create_sequences(self, df):
-        """Create sequences with enhanced features"""
-        # Scale all numerical features
         feature_columns = ['value', 'rolling_mean', 'rolling_std', 'rolling_max', 
                          'rolling_min', 'lag_1', 'lag_6', 'lag_12',
                          'hour_sin', 'hour_cos', 'day_sin', 'day_cos']
@@ -64,7 +57,6 @@ class TimeSeriesPreprocessor:
         sequences = []
         labels = []
         
-        # Calculate statistical thresholds
         mean = df['value'].mean()
         std = df['value'].std()
         upper_threshold = mean + 2*std
@@ -74,13 +66,11 @@ class TimeSeriesPreprocessor:
             seq = scaled_features[i:i + self.window_size]
             next_val = df['value'].iloc[i + self.window_size]
             
-            # Label is 1 if next value is anomalous
             is_anomaly = (next_val > upper_threshold) or (next_val < lower_threshold)
             
             sequences.append(seq)
             labels.append(float(is_anomaly))
-            
-            # Add augmented sequences for anomalies
+           
             if is_anomaly:
                 # Add slight random variations to create additional anomaly examples
                 noise = np.random.normal(0, 0.1, seq.shape)
@@ -100,7 +90,6 @@ class TimeSeriesPreprocessor:
         df = self.add_time_features(df)
         sequences, labels = self.create_sequences(df)
         
-        # Shuffle data
         indices = np.random.permutation(len(sequences))
         sequences = sequences[indices]
         labels = labels[indices]
